@@ -8,22 +8,35 @@ See <https://iojs.sleap.ai/latest/#sleap-iojs> for the upstream docs.
 
 ## Layout
 
-- `index.html` — static, dependency-free labeling page. Loads
-  `@talmolab/sleap-io.js` from `esm.sh` via an importmap, decodes a
-  random frame, lets the user click-to-place skeleton nodes, and POSTs
-  the result to the configured backend.
-- `backend.py` — Flask + flask-restx annotation receiver. Validates the
-  payload, writes it as a JSON file inside a sparse checkout of a
-  target GitHub repository, and commits/pushes.
-- `.github/workflows/preview.yml` — deploys a per-PR static preview of
-  `index.html` to the `gh-pages` branch.
+- `src/` — Vite-served labeling page. `index.html` is the entry
+  point; `main.ts` boots the app and wires up `skeleton.ts`,
+  `payload.ts`, `video.ts`, and `labeler.ts`. `@talmolab/sleap-io.js`
+  is bundled from npm — no `esm.sh` import map.
+- `configs/` — Vite, Vitest, Playwright, TypeScript and Prettier
+  configs. Tools are invoked via the `npm` scripts in
+  `package.json` rather than directly.
+- `tests/unit/` — Vitest unit tests for pure modules (`payload.ts`,
+  `skeleton.ts`).
+- `tests/integration/` — Playwright tests that boot the Vite dev
+  server and assert against the rendered DOM.
+- `backend.py` — Flask + flask-restx annotation receiver. Validates
+  the payload, writes it as a JSON file inside a sparse checkout of
+  a target GitHub repository, and commits/pushes.
+- `.github/workflows/preview.yml` — builds the site with
+  `npm run build` and deploys a per-PR static preview of `dist/` to
+  the `gh-pages` branch.
+- `.github/workflows/test.yml` — runs the Vitest + Playwright
+  suites on every PR.
 
 ## Run locally
 
 ```bash
-# Serve the static page (no build step required)
-python -m http.server 8000
-# → open http://localhost:8000/
+# Install dependencies
+npm install
+
+# Serve the labeling page (Vite dev server with HMR)
+npm run dev
+# → open http://localhost:5173/
 
 # In another terminal, run the receiver
 pip install -r requirements.txt
@@ -32,3 +45,16 @@ python backend.py
 ```
 
 Then point the labeling page's "Server endpoint" at `http://localhost:5000/api/annotations` and provide the API secret you configured via the `API_SECRET` environment variable.
+
+## npm scripts
+
+| Script                  | What it does                                             |
+| ----------------------- | -------------------------------------------------------- |
+| `npm run dev`           | Start the Vite dev server with HMR.                      |
+| `npm run build`         | Bundle the labeling page into `dist/` for deployment.    |
+| `npm run preview`       | Preview the built `dist/` locally.                       |
+| `npm run typecheck`     | Run `tsc --noEmit` against `src/`, `tests/`, `configs/`. |
+| `npm test`              | Run the Vitest unit suite.                               |
+| `npm run test:coverage` | Run Vitest with v8 coverage.                             |
+| `npm run test:e2e`      | Run the Playwright integration suite.                    |
+| `npm run format`        | Format the project with Prettier.                        |
