@@ -193,6 +193,35 @@ canvas {
     pointer-events: auto;
 }
 
+.box-overlay {
+    position: absolute;
+    border: 2px solid #0ea5e9;
+    background: rgba(14, 165, 233, 0.18);
+    box-shadow: 0 0 0 1px rgba(2, 6, 23, 0.6);
+    pointer-events: none;
+}
+
+.box-coords {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: #0b1220;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+}
+
+.box-coords .status-icon {
+    color: #555;
+}
+
+.box-coords .status-icon.placed {
+    color: #44ff88;
+}
+
 .sidebar {
     width: 300px;
     background: #111827;

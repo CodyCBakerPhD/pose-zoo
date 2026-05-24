@@ -54,11 +54,10 @@ const comingSoonView = document.getElementById("comingSoonView") as HTMLElement;
 const comingSoonModeName = document.getElementById("comingSoonModeName") as HTMLElement;
 const modeButtons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-view-mode]"));
 
-type ViewMode = "binary" | "track" | "box" | "label";
+type ViewMode = "binary" | "track" | "label";
 const VIEW_MODE_NAMES: Record<ViewMode, string> = {
     binary: "Binary",
     track: "Track",
-    box: "Box",
     label: "Label",
 };
 
@@ -261,6 +260,14 @@ for (const button of modeButtons) {
         if (!mode) return;
         setViewMode(mode);
     });
+}
+
+// Cross-page nav links (e.g. from box.html) can preselect a mode via
+// `./index.html#binary`. Only honour known modes — unknown hashes fall
+// back to the default "label" view.
+const initialHash = window.location.hash.replace(/^#/, "") as ViewMode;
+if (initialHash && initialHash in VIEW_MODE_NAMES) {
+    setViewMode(initialHash);
 }
 
 // ---- Boot ----

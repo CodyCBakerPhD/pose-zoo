@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Pose Zoo — sleap-io.js Labeler</title>
+        <title>Pose Zoo — Box Selection</title>
         <link rel="stylesheet" href="./styles.css" />
     </head>
     <body>
@@ -11,39 +11,44 @@
             <div class="top-nav-inner">
                 <div class="top-nav-brand">Pose Zoo</div>
                 <nav class="top-nav-links" aria-label="View modes">
-                    <button class="top-nav-link" data-view-mode="binary" type="button">
-                        Binary
-                    </button>
-                    <button class="top-nav-link" data-view-mode="track" type="button">Track</button>
-                    <a class="top-nav-link" href="./box.html">Box</a>
-                    <button class="top-nav-link active" data-view-mode="label" type="button">
-                        Label
-                    </button>
+                    <a class="top-nav-link" href="./index.html#binary">Binary</a>
+                    <a class="top-nav-link" href="./index.html#track">Track</a>
+                    <a class="top-nav-link active" href="./box.html" aria-current="page">Box</a>
+                    <a class="top-nav-link" href="./index.html">Label</a>
                 </nav>
             </div>
         </header>
 
         <main class="view-shell">
-            <section id="labelView">
+            <section id="boxView">
                 <p class="instructions">
-                    A random frame from the EMBER-hosted video is decoded with <code>sleap-io.js</code>.
-                    <br>
-                    Click a label on the right to select it, then click the frame to place a point.
-                    <br>
-                    Placed points are collected into a <code>LabeledFrame</code> / <code>Instance</code> and can be downloaded as a <code>.slp</code> training file.
+                    A random frame from the EMBER-hosted video is decoded with
+                    <code>sleap-io.js</code>.
+                    <br />
+                    Click and drag on the frame to draw the rectangular box that fully contains the
+                    subject.
+                    <br />
+                    Drawing again replaces the previous box. Download the result as a simple JSON
+                    file.
                 </p>
 
                 <div class="controls">
                     <span class="frame-info" id="frameInfo">Loading…</span>
                     <button id="newFrameBtn" disabled>🎲 New Random Frame</button>
-                    <button id="resetBtn" disabled>🔄 Reset Labels</button>
-                    <button id="downloadBtn" disabled>💾 Download .slp</button>
+                    <button id="resetBtn" disabled>🔄 Reset Box</button>
+                    <button id="downloadBtn" disabled>💾 Download JSON</button>
                 </div>
 
                 <div class="main-container">
                     <div>
                         <div class="canvas-container" id="canvasContainer" style="display: none">
                             <canvas id="frameCanvas"></canvas>
+                            <div
+                                class="box-overlay"
+                                id="boxOverlay"
+                                style="display: none"
+                                aria-hidden="true"
+                            ></div>
                         </div>
                         <div class="loading-fullscreen" id="initialLoading">
                             <div class="spinner"></div>
@@ -52,12 +57,15 @@
                     </div>
 
                     <div class="sidebar">
-                        <h2>🏷️ Skeleton</h2>
-                        <div class="label-palette" id="labelPalette"></div>
+                        <h2>📦 Box</h2>
+                        <div class="box-coords" id="boxCoords">
+                            <span class="status-icon" id="boxStatusIcon">○</span>
+                            <span id="boxCoordsText">No box drawn yet</span>
+                        </div>
 
                         <div class="output-section">
                             <h3>JSON Preview</h3>
-                            <pre id="jsonOutput">{ "labels": [] }</pre>
+                            <pre id="jsonOutput">{ "box": null }</pre>
                         </div>
 
                         <div id="statusMsg"></div>
@@ -65,10 +73,6 @@
                 </div>
             </section>
 
-            <section id="comingSoonView" class="coming-soon" hidden>
-                <h1><span id="comingSoonModeName">Mode</span> View</h1>
-                <p>Coming soon…</p>
-            </section>
             <p class="subtitle page-credit">
                 Powered by
                 <a href="https://github.com/talmolab/sleap-io.js" target="_blank" rel="noopener"
@@ -78,6 +82,6 @@
             </p>
         </main>
 
-        <script type="module" src="./main.ts"></script>
+        <script type="module" src="./box.ts"></script>
     </body>
 </html>

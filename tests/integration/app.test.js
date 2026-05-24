@@ -21,9 +21,11 @@ test.describe("Pose Zoo labeling page", () => {
     test("shows top nav modes and coming soon placeholder for non-label modes", async ({
         page,
     }) => {
-        for (const mode of ["binary", "track", "box", "label"]) {
+        for (const mode of ["binary", "track", "label"]) {
             await expect(page.locator(`[data-view-mode="${mode}"]`)).toBeVisible();
         }
+        // `box` is its own page, so it's a link rather than a data-view-mode button.
+        await expect(page.locator('a.top-nav-link[href*="box.html"]')).toBeVisible();
 
         await page.locator('[data-view-mode="binary"]').click();
         await expect(page.locator("#comingSoonView")).toBeVisible();
@@ -33,6 +35,14 @@ test.describe("Pose Zoo labeling page", () => {
         await page.locator('[data-view-mode="label"]').click();
         await expect(page.locator("#labelView")).toBeVisible();
         await expect(page.locator("#comingSoonView")).toBeHidden();
+    });
+
+    test("Box nav link points to the standalone box page", async ({ page }) => {
+        const boxLink = page.locator('a.top-nav-link[href*="box.html"]');
+        await expect(boxLink).toBeVisible();
+        await expect(boxLink).toHaveText("Box");
+        await boxLink.click();
+        await expect(page).toHaveURL(/box\.html$/);
     });
 
     test("renders one palette entry per label definition", async ({ page }) => {
@@ -65,5 +75,41 @@ test.describe("Pose Zoo labeling page", () => {
             "nose",
             "tail_base",
         ]);
+    });
+});
+
+test.describe("Pose Zoo box-selection page", () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto("/box.html");
+    });
+
+    test("renders the box page chrome with Box active in the nav", async ({ page }) => {
+        await expect(page.locator(".top-nav-brand")).toContainText("Pose Zoo");
+        const boxLink = page.locator('a.top-nav-link[href*="box.html"]');
+        await expect(boxLink).toHaveClass(/active/);
+    });
+
+    test("shows the three box-page controls", async ({ page }) => {
+        await expect(page.locator("#newFrameBtn")).toBeVisible();
+        await expect(page.locator("#resetBtn")).toContainText("Reset Box");
+        await expect(page.locator("#downloadBtn")).toContainText("Download JSON");
+    });
+
+    test("Reset and Download start disabled and JSON preview shows a null box", async ({
+        page,
+    }) => {
+        await expect(page.locator("#resetBtn")).toBeDisabled();
+        await expect(page.locator("#downloadBtn")).toBeDisabled();
+        const text = await page.locator("#jsonOutput").textContent();
+        expect(text).toBeTruthy();
+        const json = JSON.parse(text);
+        expect(json).toHaveProperty("box", null);
+    });
+
+    test("Label link in the nav points back to the labeling page", async ({ page }) => {
+        const labelLink = page.locator('a.top-nav-link[href$="index.html"]', { hasText: "Label" });
+        await expect(labelLink).toBeVisible();
+        await labelLink.click();
+        await expect(page).toHaveURL(/\/(index\.html)?$/);
     });
 });

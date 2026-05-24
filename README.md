@@ -10,8 +10,12 @@ See <https://iojs.sleap.ai/latest/#sleap-iojs> for the upstream docs.
 
 - `src/` — Vite-served labeling page. `index.html` is the entry
   point; `main.ts` boots the app and wires up `skeleton.ts`,
-  `payload.ts`, `video.ts`, and `labeler.ts`. `@talmolab/sleap-io.js`
-  is bundled from npm — no `esm.sh` import map.
+  `payload.ts`, `video.ts`, and `labeler.ts`. `box.html` + `box.ts` is
+  the separate box-selection page (draw a rectangle around the
+  subject, export simple JSON; see issue #7). It reuses the
+  video-loading code in `video.ts` but has its own boot script and
+  no labeling palette. `@talmolab/sleap-io.js` is bundled from npm —
+  no `esm.sh` import map.
 - `configs/` — Vite, Vitest, Playwright, TypeScript and Prettier
   configs. Tools are invoked via the `npm` scripts in
   `package.json` rather than directly.
