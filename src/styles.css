@@ -26,9 +26,9 @@ body {
     min-height: 64px;
     padding: 0 20px;
     display: flex;
-    gap: 24px;
+    gap: 12px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .top-nav-brand {
@@ -69,6 +69,9 @@ body {
     max-width: 1240px;
     margin: 0 auto;
     padding: 20px 20px 40px;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
 }
 
 h1 {
@@ -329,4 +332,9 @@ canvas {
 .coming-soon p {
     color: #cbd5e1;
     font-size: 1.05rem;
+}
+
+.page-credit {
+    margin-top: auto;
+    text-align: right;
 }

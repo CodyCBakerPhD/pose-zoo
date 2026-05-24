@@ -5,9 +5,10 @@ test.describe("Pose Zoo labeling page", () => {
         await page.goto("/");
     });
 
-    test("renders the header and subtitle", async ({ page }) => {
-        await expect(page.locator("#labelView h1")).toContainText("Pose Zoo");
-        await expect(page.locator(".subtitle")).toContainText("sleap-io.js");
+    test("renders top nav title and page credit", async ({ page }) => {
+        await expect(page.locator(".top-nav-brand")).toContainText("Pose Zoo");
+        await expect(page.locator(".top-nav-brand")).not.toContainText("🦓");
+        await expect(page.locator(".page-credit")).toContainText("sleap-io.js");
     });
 
     test("shows the three primary controls", async ({ page }) => {

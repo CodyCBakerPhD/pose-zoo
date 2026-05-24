@@ -9,7 +9,7 @@
     <body>
         <header class="top-nav">
             <div class="top-nav-inner">
-                <div class="top-nav-brand">🦓 Pose Zoo</div>
+                <div class="top-nav-brand">Pose Zoo</div>
                 <nav class="top-nav-links" aria-label="View modes">
                     <button class="top-nav-link" data-view-mode="binary" type="button">
                         Binary
@@ -25,14 +25,6 @@
 
         <main class="view-shell">
             <section id="labelView">
-                <h1>🦓 Pose Zoo</h1>
-                <p class="subtitle">
-                    Labeling page powered by
-                    <a href="https://github.com/talmolab/sleap-io.js" target="_blank" rel="noopener"
-                        >@talmolab/sleap-io.js</a
-                    >
-                    v2.
-                </p>
                 <p class="instructions">
                     A random frame from the EMBER-hosted video is decoded with
                     <code>sleap-io.js</code>. Click a label on the right to select it, then click
@@ -77,6 +69,13 @@
                 <h1><span id="comingSoonModeName">Mode</span> View</h1>
                 <p>Coming soon…</p>
             </section>
+            <p class="subtitle page-credit">
+                Powered by
+                <a href="https://github.com/talmolab/sleap-io.js" target="_blank" rel="noopener"
+                    >@talmolab/sleap-io.js</a
+                >
+                v2.
+            </p>
         </main>
 
         <script type="module" src="./main.ts"></script>
