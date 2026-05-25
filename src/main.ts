@@ -8,6 +8,7 @@ import { createLabeler } from "./labeler.js";
 import { loadVideoModel, refreshTotalFrames, VIDEO_URL, type VideoModel } from "./video.js";
 import { buildLabelsObject, pickRandomFrame, type VideoMeta } from "./payload.js";
 import { submitLabelPayload } from "./label-api.js";
+import { LABEL_DEFINITIONS } from "./skeleton.js";
 
 // ---- Diagnostics ----
 // Surface module-evaluation / async errors directly into the loading
@@ -78,6 +79,12 @@ const labeler = createLabeler({
     getDisplayScale: () => displayScale,
     getVideoMeta,
 });
+
+function updateSubmitReadyState() {
+    downloadBtn.classList.toggle("ready", labeler.placed.size === LABEL_DEFINITIONS.length);
+}
+labeler.onChange(updateSubmitReadyState);
+updateSubmitReadyState();
 
 function setControlsEnabled(enabled: boolean) {
     newFrameBtn.disabled = !enabled;
