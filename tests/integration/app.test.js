@@ -89,21 +89,17 @@ test.describe("Pozu box-selection page", () => {
         await expect(boxLink).toHaveClass(/active/);
     });
 
-    test("shows the three box-page controls", async ({ page }) => {
-        await expect(page.locator("#newFrameBtn")).toBeVisible();
+    test("shows box controls with updated bottom actions", async ({ page }) => {
+        await expect(page.locator("#newFrameBtn")).toContainText("No Subject Present");
         await expect(page.locator("#resetBtn")).toContainText("Reset Box");
-        await expect(page.locator("#downloadBtn")).toContainText("Submit to Server");
+        await expect(page.locator("#downloadBtn")).toContainText("Submit");
     });
 
-    test("Reset and Download start disabled and JSON preview shows a null box", async ({
-        page,
-    }) => {
+    test("Reset and Submit start disabled and box/json panels are absent", async ({ page }) => {
         await expect(page.locator("#resetBtn")).toBeDisabled();
         await expect(page.locator("#downloadBtn")).toBeDisabled();
-        const text = await page.locator("#jsonOutput").textContent();
-        expect(text).toBeTruthy();
-        const json = JSON.parse(text);
-        expect(json).toHaveProperty("box", null);
+        await expect(page.locator("#jsonOutput")).toHaveCount(0);
+        await expect(page.locator("#boxCoords")).toHaveCount(0);
     });
 
     test("Label link in the nav points back to the labeling page", async ({ page }) => {

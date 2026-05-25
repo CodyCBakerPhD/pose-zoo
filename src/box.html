@@ -22,14 +22,13 @@
         <main class="view-shell">
             <section id="boxView">
                 <p class="instructions">
-                    Click and drag on the frame to draw the rectangular box that fully contains the subject, then submit your result and repeat.
+                    Click and drag on the frame to draw the rectangular box that fully contains the
+                    subject, then submit your result and repeat.
                 </p>
 
                 <div class="controls">
                     <span class="frame-info" id="frameInfo">Loading…</span>
-                    <button id="newFrameBtn" disabled>🎲 New Random Frame</button>
                     <button id="resetBtn" disabled>🔄 Reset Box</button>
-                    <button id="downloadBtn" disabled>📤 Submit to Server</button>
                 </div>
 
                 <div class="main-container">
@@ -47,20 +46,10 @@
                             <div class="spinner"></div>
                             Loading the EMBER video & extracting a random frame…
                         </div>
-                    </div>
-
-                    <div class="sidebar">
-                        <h2>📦 Box</h2>
-                        <div class="box-coords" id="boxCoords">
-                            <span class="status-icon" id="boxStatusIcon">○</span>
-                            <span id="boxCoordsText">No box drawn yet</span>
+                        <div class="bottom-actions">
+                            <button id="newFrameBtn" disabled>🚫 No Subject Present</button>
+                            <button id="downloadBtn" disabled>📤 Submit</button>
                         </div>
-
-                        <div class="output-section">
-                            <h3>JSON Preview</h3>
-                            <pre id="jsonOutput">{ "box": null }</pre>
-                        </div>
-
                         <div id="statusMsg"></div>
                     </div>
                 </div>

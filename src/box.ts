@@ -26,7 +26,7 @@ function showFatal(label: string, err: unknown): void {
     console.error(`[pozu:box] ${label}:`, err);
     const overlay = document.getElementById("initialLoading");
     if (overlay) {
-        overlay.textContent = `❌ ${label}: ${msg}. See the browser console for details; click 🎲 New Random Frame to retry.`;
+        overlay.textContent = `❌ ${label}: ${msg}. See the browser console for details; click 🚫 No Subject Present to retry.`;
         overlay.style.display = "flex";
     }
     for (const id of ["newFrameBtn", "resetBtn", "downloadBtn"]) {
@@ -53,14 +53,11 @@ const ctx = canvas.getContext("2d")!;
 const canvasContainer = document.getElementById("canvasContainer") as HTMLElement;
 const boxOverlay = document.getElementById("boxOverlay") as HTMLElement;
 const initialLoading = document.getElementById("initialLoading") as HTMLElement;
-const jsonOutput = document.getElementById("jsonOutput") as HTMLElement;
 const frameInfo = document.getElementById("frameInfo") as HTMLElement;
 const statusMsg = document.getElementById("statusMsg") as HTMLElement;
 const newFrameBtn = document.getElementById("newFrameBtn") as HTMLButtonElement;
 const resetBtn = document.getElementById("resetBtn") as HTMLButtonElement;
 const downloadBtn = document.getElementById("downloadBtn") as HTMLButtonElement;
-const boxStatusIcon = document.getElementById("boxStatusIcon") as HTMLElement;
-const boxCoordsText = document.getElementById("boxCoordsText") as HTMLElement;
 
 setStage("Booting pozu box mode… (loading sleap-io.js bundle)");
 
@@ -97,19 +94,6 @@ function showStatus(type: "info" | "success" | "error", message: string) {
     }
 }
 
-function updateJSON() {
-    jsonOutput.textContent = JSON.stringify(
-        buildBoxPayload({
-            videoUrl: VIDEO_URL,
-            frameIndex,
-            videoMeta: getVideoMeta(),
-            box,
-        }),
-        null,
-        2
-    );
-}
-
 /** Repaint the rectangle overlay in display (CSS) coordinates. */
 function renderBoxOverlay() {
     if (!box) {
@@ -133,20 +117,8 @@ function renderBoxOverlay() {
 
 function updateBoxUI() {
     renderBoxOverlay();
-    if (box) {
-        boxStatusIcon.textContent = "●";
-        boxStatusIcon.classList.add("placed");
-        boxCoordsText.textContent =
-            `x=${box.x.toFixed(0)}, y=${box.y.toFixed(0)}, ` +
-            `w=${box.width.toFixed(0)}, h=${box.height.toFixed(0)}`;
-    } else {
-        boxStatusIcon.textContent = "○";
-        boxStatusIcon.classList.remove("placed");
-        boxCoordsText.textContent = "No box drawn yet";
-    }
     resetBtn.disabled = box == null;
     downloadBtn.disabled = box == null;
-    updateJSON();
 }
 
 function clientToPixel(e: MouseEvent): { pixelX: number; pixelY: number } | null {
@@ -271,7 +243,7 @@ newFrameBtn.addEventListener("click", () => {
         console.error(err);
         const msg = err?.message ?? String(err);
         showStatus("error", `Failed to load frame: ${msg}`);
-        initialLoading.textContent = `❌ ${msg}. Click 🎲 New Random Frame to retry.`;
+        initialLoading.textContent = `❌ ${msg}. Click 🚫 No Subject Present to retry.`;
         initialLoading.style.display = "flex";
         newFrameBtn.disabled = false;
         resetBtn.disabled = false;
@@ -340,7 +312,7 @@ updateBoxUI();
     } catch (err) {
         console.error(err);
         const msg = (err as Error).message;
-        initialLoading.textContent = `❌ Failed to load video via sleap-io.js: ${msg}. Click 🎲 New Random Frame to retry.`;
+        initialLoading.textContent = `❌ Failed to load video via sleap-io.js: ${msg}. Click 🚫 No Subject Present to retry.`;
         showStatus("error", msg);
         newFrameBtn.disabled = false;
         resetBtn.disabled = false;
